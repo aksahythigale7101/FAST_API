@@ -1,9 +1,8 @@
+venv/
+env/
+.venv/
 __pycache__/
 *.pyc
-.venv/
 .env
-.idea/
+*.db
 .vs/
-bin/
-obj/
-*.pyproj.user
