@@ -24,12 +24,18 @@
     <Compile Include="ch24\main.py" />
     <Compile Include="ch25\main.py" />
     <Compile Include="ch26\main.py" />
+    <Compile Include="ch27\main.py" />
+    <Compile Include="ch28\main.py" />
+    <Compile Include="ch29\main.py" />
     <Compile Include="FAST_API.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ch24\" />
     <Folder Include="ch25\" />
     <Folder Include="ch26\" />
+    <Folder Include="ch27\" />
+    <Folder Include="ch28\" />
+    <Folder Include="ch29\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
