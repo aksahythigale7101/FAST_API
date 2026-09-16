@@ -1,3 +1,7 @@
 uvicorn main:app --reload
 
 Ch 24,25 ---Return type basic
+
+ch 26,27,28--From Handling
+
+ch 29 ---Http Excepction
