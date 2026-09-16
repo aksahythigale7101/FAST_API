@@ -11,6 +11,7 @@
     <OutputPath>.</OutputPath>
     <Name>FAST_API</Name>
     <RootNamespace>FAST_API</RootNamespace>
+    <SuppressEnvironmentCreationPrompt>True</SuppressEnvironmentCreationPrompt>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
