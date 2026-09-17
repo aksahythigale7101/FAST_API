@@ -28,6 +28,8 @@
     <Compile Include="ch27\main.py" />
     <Compile Include="ch28\main.py" />
     <Compile Include="ch29\main.py" />
+    <Compile Include="ch30\Models\Junctions.py" />
+    <Compile Include="ch30\Models\tables.py" />
     <Compile Include="FAST_API.py" />
   </ItemGroup>
   <ItemGroup>
@@ -37,6 +39,8 @@
     <Folder Include="ch27\" />
     <Folder Include="ch28\" />
     <Folder Include="ch29\" />
+    <Folder Include="ch30\" />
+    <Folder Include="ch30\Models\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
