@@ -1,0 +1,808 @@
+﻿# Alembic Migration — Complete Study Notes
+
+## 1. What is Alembic?
+
+**Alembic** is a database migration tool commonly used with **SQLAlchemy**.
+
+### Simple meaning
+
+> **SQLAlchemy = Models + Database interaction**
+> **Alembic = Changes in database schema manage/apply करणे**
+
+Example:
+
+Today:
+
+```python
+class User(Base):
+    id: Mapped[int]
+    name: Mapped[str]
+```
+
+Later, you add:
+
+```python
+email: Mapped[str]
+```
+
+Your existing database मध्ये `email` column automatically add होत नाही.
+
+**Alembic** वापरून हा change existing database मध्ये safely apply करता येतो.
+
+---
+
+# 2. Install Alembic
+
+Terminal मध्ये:
+
+```bash
+pip install alembic
+```
+
+Check:
+
+```bash
+alembic --version
+```
+
+---
+
+# 3. Initialize Alembic
+
+Project folder मध्ये run करा:
+
+```bash
+alembic init alembic
+```
+
+यामुळे Alembic migration system तयार होते.
+
+### Folder Structure
+
+```text
+project/
+│
+├── app/
+│   ├── models.py
+│   └── database.py
+│
+├── alembic/
+│   ├── versions/
+│   ├── env.py
+│   ├── script.py.mako
+│   └── README
+│
+└── alembic.ini
+```
+
+### Important files
+
+| File                | Purpose                       |
+| ------------------- | ----------------------------- |
+| `alembic.ini`       | Alembic configuration         |
+| `alembic/env.py`    | Alembic runtime configuration |
+| `alembic/versions/` | Migration files               |
+| `script.py.mako`    | Migration file template       |
+
+---
+
+# 4. Configure Database
+
+`alembic.ini` मध्ये:
+
+```ini
+sqlalchemy.url = sqlite:///./app.db
+```
+
+याचा अर्थ:
+
+> Alembic ला सांगत आहोत की आपला database `app.db` हा SQLite database आहे.
+
+---
+
+# 5. Alembic ला SQLAlchemy Models कुठे आहेत ते सांगणे
+
+हा **very important step** आहे.
+
+`alembic/env.py` मध्ये आपला `Base.metadata` configure करावा लागतो.
+
+Example:
+
+```python
+from app.models import Base
+
+target_metadata = Base.metadata
+```
+
+### याचा अर्थ काय?
+
+```python
+target_metadata = Base.metadata
+```
+
+म्हणजे:
+
+> "Alembic, माझ्या SQLAlchemy models ची माहिती `Base.metadata` मध्ये आहे. Database schema compare करण्यासाठी ती वापर."
+
+---
+
+# 6. Why `Base.metadata` is Required?
+
+Alembic ला दोन गोष्टी compare करायच्या असतात:
+
+```text
+SQLAlchemy Models
+       VS
+Current Database
+```
+
+Example:
+
+SQLAlchemy model:
+
+```text
+users
+ ├── id
+ ├── name
+ └── email
+```
+
+Current database:
+
+```text
+users
+ ├── id
+ └── name
+```
+
+Alembic difference शोधतो:
+
+```text
+email column missing
+```
+
+आणि migration तयार करू शकतो.
+
+---
+
+# 7. What is `--autogenerate`?
+
+Command:
+
+```bash
+alembic revision --autogenerate -m "create users table"
+```
+
+### `--autogenerate` काय करते?
+
+Alembic compare करते:
+
+```text
+SQLAlchemy Model
+       ↓
+   Base.metadata
+       ↓
+       VS
+       ↓
+Current Database
+```
+
+आणि detected differences वर based migration file generate करते.
+
+---
+
+# 8. Migration File कुठे तयार होते?
+
+Command:
+
+```bash
+alembic revision --autogenerate -m "create users table"
+```
+
+नंतर:
+
+```text
+alembic/
+└── versions/
+    └── abc123_create_users_table.py
+```
+
+`abc123` हा migration revision ID आहे.
+
+---
+
+# 9. Migration File
+
+Generated migration file मध्ये साधारण असे functions असतात:
+
+```python
+def upgrade():
+    pass
+
+
+def downgrade():
+    pass
+```
+
+---
+
+# 10. `upgrade()` म्हणजे काय?
+
+```python
+def upgrade():
+```
+
+याचा अर्थ:
+
+> **Database पुढच्या migration version ला घेऊन जा.**
+
+Example:
+
+```python
+def upgrade():
+    op.add_column(
+        "users",
+        sa.Column("email", sa.String(), nullable=True)
+    )
+```
+
+यामुळे database मध्ये `email` column add होईल.
+
+---
+
+# 11. `downgrade()` म्हणजे काय?
+
+```python
+def downgrade():
+```
+
+याचा अर्थ:
+
+> **Migration reverse करा / database मागच्या version वर घेऊन जा.**
+
+Example:
+
+```python
+def downgrade():
+    op.drop_column("users", "email")
+```
+
+जर `upgrade()` ने email column add केला असेल, तर `downgrade()` तो remove करू शकतो.
+
+---
+
+# 12. Migration Database मध्ये Apply करणे
+
+Migration file तयार झाली म्हणून database automatically change होत नाही.
+
+Migration apply करण्यासाठी:
+
+```bash
+alembic upgrade head
+```
+
+### `head` म्हणजे?
+
+> **Latest migration revision**
+
+म्हणजे:
+
+```text
+Old Database
+     ↓
+Migration 1
+     ↓
+Migration 2
+     ↓
+Migration 3
+     ↓
+HEAD
+```
+
+`alembic upgrade head` database ला latest migration पर्यंत घेऊन जाते.
+
+---
+
+# 13. Rollback
+
+Latest migration reverse करण्यासाठी:
+
+```bash
+alembic downgrade -1
+```
+
+याचा अर्थ:
+
+> Current migration पासून **एक step मागे जा.**
+
+Example:
+
+```text
+Migration 1
+    ↓
+Migration 2
+    ↓
+Migration 3  ← Current
+```
+
+After:
+
+```bash
+alembic downgrade -1
+```
+
+```text
+Migration 1
+    ↓
+Migration 2  ← Current
+```
+
+---
+
+# 14. Complete Alembic Flow
+
+हा flow interview साठी लक्षात ठेवा:
+
+```text
+SQLAlchemy Model
+       ↓
+Model मध्ये change
+       ↓
+Alembic --autogenerate
+       ↓
+Migration file created
+       ↓
+Migration contains
+upgrade() / downgrade()
+       ↓
+alembic upgrade head
+       ↓
+Database updated
+```
+
+### Simple Example
+
+Initially:
+
+```python
+class User(Base):
+    id: Mapped[int]
+    name: Mapped[str]
+```
+
+नंतर:
+
+```python
+class User(Base):
+    id: Mapped[int]
+    name: Mapped[str]
+    email: Mapped[str]
+```
+
+Flow:
+
+```text
+User Model changed
+       ↓
+Alembic detects email
+       ↓
+Migration generated
+       ↓
+upgrade()
+       ↓
+email column added
+```
+
+---
+
+# 15. Important: `--autogenerate` is NOT 100% Perfect
+
+`--autogenerate` useful आहे, पण generated migration blindly use करू नये.
+
+Always:
+
+```text
+Generate Migration
+       ↓
+Review Migration
+       ↓
+Test Migration
+       ↓
+Apply Migration
+```
+
+### Interview Point
+
+> **Alembic autogenerate detects schema differences based on SQLAlchemy metadata, but generated migrations should always be reviewed manually.**
+
+---
+
+# 16. Schema Migration
+
+**Schema migration** म्हणजे database structure मध्ये change करणे.
+
+Examples:
+
+### Create table
+
+```text
+Create users table
+```
+
+### Add column
+
+```sql
+ALTER TABLE users ADD COLUMN email;
+```
+
+### Remove column
+
+```text
+Remove email column
+```
+
+### Rename column
+
+```text
+name → full_name
+```
+
+### Add Foreign Key
+
+```text
+users.department_id
+        ↓
+departments.id
+```
+
+Common schema changes:
+
+```text
+Create table
+Add column
+Remove column
+Rename column
+Add foreign key
+Modify constraints
+```
+
+---
+
+# 17. Data Migration
+
+**Data migration** म्हणजे existing database records/data मध्ये changes करणे.
+
+Example:
+
+Existing users:
+
+```text
+id | name | email
+------------------
+1  | John | NULL
+2  | Alex | NULL
+```
+
+आपल्याला existing records मध्ये email update करायचा आहे:
+
+```sql
+UPDATE users
+SET email = 'unknown@example.com'
+WHERE email IS NULL;
+```
+
+हा **data change** आहे.
+
+---
+
+# 18. Schema Migration vs Data Migration
+
+| Schema Migration         | Data Migration      |
+| ------------------------ | ------------------- |
+| Database structure बदलते | Existing data बदलतो |
+| Add column               | Update records      |
+| Remove column            | Copy data           |
+| Create table             | Transform data      |
+| Add foreign key          | Set default values  |
+| Rename column            | Migrate old values  |
+
+### Easy way to remember
+
+```text
+Schema = Structure
+Data   = Records
+```
+
+---
+
+# 19. Alembic `env.py`
+
+`env.py` हा Alembic चा **main configuration/runtime file** आहे.
+
+यामध्ये मुख्यतः Alembic ला information दिली जाते:
+
+```text
+Database कोणता?
+       ↓
+SQLAlchemy Models कोणते?
+       ↓
+Base.metadata कुठे आहे?
+       ↓
+Alembic configuration
+```
+
+Important:
+
+```python
+target_metadata = Base.metadata
+```
+
+---
+
+# 20. `create_all()` vs Alembic
+
+SQLAlchemy मध्ये:
+
+```python
+Base.metadata.create_all(engine)
+```
+
+हे tables create करू शकते.
+
+पण existing database schema बदलताना migration history maintain करण्यासाठी ते Alembic सारखे migration system नाही.
+
+### Example
+
+Initially:
+
+```text
+User
+ ├── id
+ └── name
+```
+
+Database तयार झाला.
+
+नंतर model मध्ये:
+
+```text
+User
+ ├── id
+ ├── name
+ └── email
+```
+
+`create_all()` existing table मध्ये `email` column add करण्यासाठी migration history तयार करत नाही.
+
+Alembic वापरल्यास:
+
+```text
+Model Change
+     ↓
+Migration File
+     ↓
+upgrade()
+     ↓
+Database Change
+```
+
+---
+
+# 21. SQLAlchemy vs Alembic
+
+### SQLAlchemy
+
+> "माझे models कसे आहेत आणि Python application database शी कसे communicate करणार?"
+
+SQLAlchemy handles:
+
+```text
+Models
+ORM
+Queries
+CRUD
+Database connection
+Transactions
+```
+
+### Alembic
+
+> "Model मध्ये change झाला आहे. तो existing database मध्ये कसा apply करायचा?"
+
+Alembic handles:
+
+```text
+Schema changes
+Migration history
+Upgrade
+Downgrade
+Migration files
+```
+
+---
+
+# 22. Most Important Alembic Commands
+
+### Initialize
+
+```bash
+alembic init alembic
+```
+
+### Create migration manually
+
+```bash
+alembic revision -m "message"
+```
+
+### Create migration automatically from model changes
+
+```bash
+alembic revision --autogenerate -m "message"
+```
+
+### Apply latest migrations
+
+```bash
+alembic upgrade head
+```
+
+### Move one migration backward
+
+```bash
+alembic downgrade -1
+```
+
+---
+
+# 23. Commands — Quick Revision
+
+```text
+pip install alembic
+        ↓
+alembic init alembic
+        ↓
+Configure alembic.ini
+        ↓
+Configure env.py
+        ↓
+target_metadata = Base.metadata
+        ↓
+Change SQLAlchemy Model
+        ↓
+alembic revision --autogenerate -m "..."
+        ↓
+Review migration
+        ↓
+alembic upgrade head
+```
+
+Rollback:
+
+```bash
+alembic downgrade -1
+```
+
+---
+
+# 24. Interview Questions
+
+### Q1. What is Alembic?
+
+**Answer:**
+
+> Alembic is a database migration tool used with SQLAlchemy to manage and apply database schema changes over time.
+
+---
+
+### Q2. Why do we use Alembic?
+
+> We use Alembic to track database schema changes and apply those changes safely to existing databases using migration files.
+
+---
+
+### Q3. What is `Base.metadata`?
+
+> `Base.metadata` contains metadata about SQLAlchemy models and their database tables. Alembic uses it to compare the expected schema with the current database schema.
+
+---
+
+### Q4. What does `--autogenerate` do?
+
+> `--autogenerate` compares SQLAlchemy model metadata with the current database schema and generates a migration containing detected differences.
+
+---
+
+### Q5. What is `upgrade()`?
+
+> `upgrade()` applies a migration and moves the database forward to a newer revision.
+
+---
+
+### Q6. What is `downgrade()`?
+
+> `downgrade()` reverses a migration and moves the database to an earlier revision.
+
+---
+
+### Q7. What does `head` mean?
+
+> `head` represents the latest migration revision in the migration history.
+
+---
+
+### Q8. Is autogenerate 100% reliable?
+
+> No. Autogenerate is not perfect. Generated migrations should always be reviewed and tested before applying them.
+
+---
+
+### Q9. Difference between `create_all()` and Alembic?
+
+> `create_all()` can create tables that don't exist, but it doesn't provide migration history for managing changes to an existing schema. Alembic provides versioned migrations with upgrade and downgrade support.
+
+---
+
+# 25. One-Line Memory Trick
+
+```text
+SQLAlchemy
+= Define Models
+
+Alembic
+= Manage Model → Database Changes
+```
+
+And remember:
+
+```text
+revision
+= Create migration file
+
+upgrade
+= Forward
+
+downgrade
+= Backward
+
+head
+= Latest
+
+autogenerate
+= Detect model/schema differences
+```
+
+# 26. Final Mental Model
+
+```text
+              SQLAlchemy
+                  │
+                  ↓
+               Models
+                  │
+          Model changed
+                  │
+                  ↓
+              Alembic
+                  │
+          --autogenerate
+                  │
+                  ↓
+          Migration File
+          ┌──────────────┐
+          │  upgrade()   │
+          │  downgrade() │
+          └──────────────┘
+                  │
+                  ↓
+       alembic upgrade head
+                  │
+                  ↓
+          Database Updated
+```
+
+**Core concept:**
+
+> **Alembic does not replace SQLAlchemy.**
+> SQLAlchemy defines and interacts with the database; Alembic manages the history and application of database schema changes.
+
