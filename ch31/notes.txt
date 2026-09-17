@@ -1,0 +1,69 @@
+﻿2. Complete architecture
+
+Real FastAPI project साधारण असा असू शकतो:
+
+project/
+│
+├── app/
+│   ├── main.py
+│   │
+│   ├── database.py
+│   │
+│   ├── models/
+│   │   └── user.py
+│   │
+│   ├── schemas/
+│   │   └── user.py
+│   │
+│   ├── routers/
+│   │   └── user.py
+│   │
+│   └── services/
+│       └── user_service.py
+│
+├── alembic/
+│   ├── versions/
+│   ├── env.py
+│   └── script.py.mako
+│
+├── alembic.ini
+└── requirements.txt
+
+Interview मध्ये असा architecture explain करता आला पाहिजे.
+
+-----------------------------------------------------------------------
+What is an AsyncEngine?
+
+Answer:
+
+AsyncEngine is SQLAlchemy's asynchronous engine used to communicate with the database using async I/O.
+
+मराठीत:
+
+AsyncEngine हा application आणि database यांच्यात asynchronous connection/communication manage करतो.
+---------------------------------------------------------------------------------
+expire_on_commit=False म्हणजे काय?
+  expire_on_commit=False
+  Commit झाल्यानंतर SQLAlchemy object ची attributes expire होऊ नयेत म्हणून.
+--------------------------------------------------------------------------
+SQLAlchemy				Alembic
+ORM / DB toolkit		Migration tool
+Runtime DB operations	Schema changes
+SELECT					ALTER TABLE
+INSERT					ADD COLUMN
+UPDATE					CREATE INDEX
+DELETE					DROP/modify schema
+AsyncSession			Migration scripts
+-----------------------------------------------------------------------------
+Pydantic			SQLAlchemy
+API validation		Database interaction
+Request/response	DB model
+Data validation		ORM mapping
+UserCreate			User
+FastAPI layer		Database layer
+---------------------------------------------------------------------------
+"FastAPI + Async SQLAlchemy + Alembic का?"
+   -> FastAPI is used to build the API layer, Async SQLAlchemy handles asynchronous
+      database operations, and Alembic manages version-controlled database schema 
+      migrations. Together they provide a clean architecture for building scalable 
+      FastAPI backend applications.
