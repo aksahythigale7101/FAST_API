@@ -30,6 +30,9 @@
     <Compile Include="ch29\main.py" />
     <Compile Include="ch30\Models\Junctions.py" />
     <Compile Include="ch30\Models\tables.py" />
+    <Compile Include="ch31\asyncversion\db.py" />
+    <Compile Include="ch31\asyncversion\main.py" />
+    <Compile Include="ch31\asyncversion\models.py" />
     <Compile Include="FAST_API.py" />
   </ItemGroup>
   <ItemGroup>
@@ -41,6 +44,13 @@
     <Folder Include="ch29\" />
     <Folder Include="ch30\" />
     <Folder Include="ch30\Models\" />
+    <Folder Include="ch31\" />
+    <Folder Include="ch31\asyncversion\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ch30\alembicNotes.txt" />
+    <Content Include="ch30\app.db" />
+    <Content Include="ch30\configure.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
