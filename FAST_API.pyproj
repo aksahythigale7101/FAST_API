@@ -51,6 +51,7 @@
     <Content Include="ch30\alembicNotes.txt" />
     <Content Include="ch30\app.db" />
     <Content Include="ch30\configure.txt" />
+    <Content Include="ch31\notes.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
