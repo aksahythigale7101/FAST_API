@@ -1,0 +1,138 @@
+﻿-pip install alembic
+
+- init alembic--"Alembic migration system माझ्या project मध्ये तयार कर."
+alembic/
+│
+├── versions/
+├── env.py
+├── script.py.mako
+└── README
+
+alembic.ini
+
+-alembic.ini-sqlalchemy.url = sqlite:///./app.db
+
+-. Alembic ला Model कुठे आहे हे सांगणे
+   alembic/env.py मध्ये Alembic ला तुमचा Base.metadata माहित असणे आवश्यक आहे.
+   from app.models import Base
+   target_metadata = Base.metadata
+   "Alembic, माझ्या SQLAlchemy models ची information इथे आहे. Database शी compare करण्यासाठी ती वापर."
+
+-Why?
+
+Alembic ला compare करायचे आहे:
+ Current Database
+       VS
+ SQLAlchemy Models
+ म्हणून त्याला Base.metadata पाहिजे.
+
+-alembic revision --autogenerate -m "create users table"
+ alembic/
+└── versions/
+    └── abc123_create_users_table.py
+
+-upgrade() म्हणजे काय?
+def upgrade():
+याचा अर्थ:
+Database पुढच्या version ला घेऊन जा.
+
+-downgrade() म्हणजे काय?
+def downgrade():
+याचा अर्थ:
+Migration reverse करा.
+
+-Migration Database मध्ये Apply करणे
+ Migration file तयार केल्यावर database automatically change होत नाही.
+ alembic upgrade head
+ head = latest migration
+ म्हणजे:
+ Database ला latest migration version पर्यंत घेऊन जा.
+
+-Complete Flow
+
+हा flow लक्षात ठेवा:
+    SQLAlchemy
+        ↓
+      Model
+
+    User model changed
+        ↓
+    Alembic detects change
+        ↓
+    Migration file created
+        ↓
+    Migration contains upgrade/downgrade
+        ↓
+    upgrade head
+        ↓
+    Database updated
+
+- --autogenerate
+Alembic compare करतो:
+
+SQLAlchemy Models
+       ↓
+       VS
+       ↓
+Current Database
+
+आणि difference शोधतो.Autogenerate is not 100% perfect.
+Generated migration नेहमी review करावी.
+
+-Rollback Example-  -alembic downgrade -1
+
+
+-upgrade() applies a migration and moves the database forward.
+-downgrade() reverses a migration and moves the database backward.
+-autogenerate It compares SQLAlchemy model metadata with the current database schema and generates a migration based on detected differences.
+-head means latest migration revision.
+
+
+-SQLAlchemy → ORM / Database interaction
+ Alembic    → Database schema migration
+
+
+-Difference: create_all() vs Alembic
+-Base.metadata.create_all(engine) हे tables create करू शकते.
+ पण existing table बदलण्यासाठी ते migration history maintain करत नाही.
+
+-SQLAlchemy -माझे models कसे आहेत आणि database शी Python कसे communicate करायचे.  
+-Alembic - Model मध्ये change झाला आहे. तो existing database मध्ये कसा apply करायचा?
+
+---------------------------------------------------------------------------------
+env.py हा Alembic चा main configuration/runtime file आहे.
+Database कोणता?-->SQLAlchemy models कोणते? -->Base.metadata कुठे आहे?
+ही माहिती आपण env.py मध्ये configure करतो.
+--------------------------------------------------------------------------------
+Alembic data migration आणि schema migration मध्ये वापरला जाऊ शकतो.
+
+Schema change
+Add column
+Remove column
+Create table
+Rename column
+Add foreign key
+
+Example:
+
+ALTER TABLE users ADD COLUMN email;
+Data change
+
+Existing records update करणे:
+
+UPDATE users
+SET email = 'unknown@example.com'
+WHERE email IS NULL;
+
+Real projects मध्ये दोन्ही प्रकारचे migration operations असू शकतात.
+       
+
+       ↓
+
+
+
+
+
+
+
+
