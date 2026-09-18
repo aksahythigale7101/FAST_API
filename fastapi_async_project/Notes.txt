@@ -1,4 +1,6 @@
-﻿--from pydantic_settings import BaseSettings, SettingsConfigDict
+﻿FastAPI + Async SQLAlchemy + SQLite/PostgreSQL + Pydantic
+-------------------------------------------------------------------------------
+--from pydantic_settings import BaseSettings, SettingsConfigDict
   BaseSettings चा उपयोग application ची configuration values manage करण्यासाठी होतो.
   हे values code मध्ये hard-code न करता .env मधून घेता येतात.
  :BaseSettings → .env / environment variables मधून settings वाचण्यासाठी.
