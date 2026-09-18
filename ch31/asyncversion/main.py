@@ -15,7 +15,7 @@ async def mainfile():
     # Create user
     async with AsyncSessionLocal() as session:
 
-        user = User(name="Harsh")
+        user = User(name="AKSHAY")
 
         session.add(user)
 
