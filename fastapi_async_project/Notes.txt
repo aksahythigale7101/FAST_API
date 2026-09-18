@@ -1,0 +1,81 @@
+﻿--from pydantic_settings import BaseSettings, SettingsConfigDict
+  BaseSettings चा उपयोग application ची configuration values manage करण्यासाठी होतो.
+  हे values code मध्ये hard-code न करता .env मधून घेता येतात.
+ :BaseSettings → .env / environment variables मधून settings वाचण्यासाठी.
+ :SettingsConfigDict → Pydantic ला configuration कशी करायची ते सांगण्यासाठी.
+
+
+------------------------------------------
+.env मध्ये database URL ठेवण्याचा फायदा म्हणजे database configuration code मध्ये hard-code करावी लागत नाही.
+  Production मध्ये password/code मध्ये ठेवायचा नाही.
+.env हा configuration ठेवण्यासाठी file असतो.
+		.env
+	     ↓
+	configuration values ठेवतो
+
+	env_file=".env"
+		↓
+	Pydantic ला सांगतो:"ही values .env file मधून वाच"
+आणि env_file database connection करत नाही. फक्त configuration कुठून वाचायची ते सांगते.
+-This is used when url read from .env file
+  DATABASE_URL:str
+     class config:
+         env_file = ".env"
+
+-------------------------------------------------------------------------------------------------
+:AsyncSession-हे database सोबत async पद्धतीने काम करण्यासाठी session आहे.
+:async_sessionmaker-याचा उपयोग नवीन AsyncSession तयार करण्यासाठी factory बनवायला होतो.
+
+:async_sessionmaker-"जेव्हा मला database session पाहिजे असेल, तेव्हा या engine वर based AsyncSession तयार कर."
+:bind=engine-हा session कोणत्या database engine सोबत काम करणार?
+:class_=AsyncSession-तयार होणारा session AsyncSession type चा असावा.
+:expire_on_commit=False-expire_on_commit=False → commit नंतर ORM object ची attributes expire होऊ नयेत.
+--------------------------------------------------------------------------------------------------------
+:async def get_db():-हा FastAPI मध्ये database dependency म्हणून वापरण्यासाठी function आहे.
+                  :प्रत्येक request ला database session provide करणे आणि काम झाल्यावर session बंद करणे.
+                  :FastAPI endpoint ला session देण्यासाठी.
+
+:async with AsyncSessionLocal() as session:इथे नवीन database session तयार होतो.
+           :आणि async with मुळे काम पूर्ण झाल्यावर session properly close होण्यास मदत होते.
+:yield session:"FastAPI, हा database session endpoint ला दे."
+               :endpoint ला session देतो आणि request lifecycle संपल्यावर cleanup होऊ देतो.
+
+:fLOWCHART = Request -> Depends(get_db) -> get_db() -> AsyncSessionLocal() -> session -> yield session -> endpoint ला db मिळतो
+   
+:yield का वापरले? return का नाही?
+     :return केले तर function session return करेल, पण async with चा lifecycle इथे योग्य dependency pattern प्रमाणे manage होत नाही.
+     :yield dependency ला session देतो आणि dependency चा context request lifecycle सोबत ठेवतो.
+----------------------------------------------------------------------------------------------------------------
+class ProductCreate(BaseModel):ProductCreate ला Pydantic ची सगळी validation/model functionality BaseModel कडून मिळते.
+model_config = ConfigDict(from_attributes=True):from_attributes=True Pydantic ला ORM object's attributes मधून data read करण्याची परवानगी देते.
+ProductCreate = "नवीन product बनवण्यासाठी काय-काय पाहिजे?"
+ProductUpdate = "आधीच असलेल्या product मधून काय-काय बदलायचे आहे?"
+Old Product------>PUT------>Complete new Product
+--------------------------------------------------------------------------------------------------------------
+PATCH
+update_data = product_data.model_dump(exclude_unset=True)
+           :आपल्याला फक्त client ने प्रत्यक्षात पाठवलेले fields पाहिजेत.
+Client ने काय पाठवलं?
+        ↓
+exclude_unset=True
+        ↓
+फक्त तेच fields
+
+
+setattr(object, attribute, value)
+:setattr(product, field, value)---एखाद्या object च्या attribute/property ला नवीन value देणे.
+                               ---Existing product मध्ये त्या field ची value बदल.
+                               ---setattr() हे dynamic update करते.
+ example:setattr(A, B, C)
+        A object मधल्या B property ला C value set कर.
+ --------------------------------------------------------------------------------------------------------------
+:from typing import Annotated--हे आपण FastAPI मध्ये type + additional information एकत्र लिहिण्यासाठी वापरतो.
+       :DbSession = Annotated[AsyncSession, Depends(get_db)]
+
+:APIRouter:याचा उपयोग routes वेगळ्या file/module मध्ये ठेवण्यासाठी होतो.
+          :Router फक्त request घेते आणि service ला काम देते.
+          :इथे आपण एक router object तयार करत आहोत.
+tags=["Products"]:Swagger UI मध्ये endpoints Products नावाच्या group खाली दिसतील. get,put paych,post etc..
+Depends(get_db):Dependency Injection साठी.
+                :"मला database session पाहिजे; get_db() वापरून तो तयार करून दे."
+              
