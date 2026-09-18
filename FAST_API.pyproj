@@ -115,6 +115,7 @@
     <Folder Include="ch7\" />
     <Folder Include="ch8\" />
     <Folder Include="ch9\" />
+    <Folder Include="FASTSTUDENTS\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ch10\note.txt" />
