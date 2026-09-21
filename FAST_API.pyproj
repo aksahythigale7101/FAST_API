@@ -22,18 +22,26 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="contextlib\main.py" />
     <Compile Include="fastapi_async_project\alembic\env.py" />
     <Compile Include="fastapi_async_project\app\core\config.py" />
     <Compile Include="fastapi_async_project\app\core\database.py" />
     <Compile Include="fastapi_async_project\app\main.py" />
+    <Compile Include="fastapi_async_project\app\middleware\cors.py" />
+    <Compile Include="fastapi_async_project\app\middleware\custom_middleware.py" />
+    <Compile Include="fastapi_async_project\app\middleware\__init__.py" />
     <Compile Include="fastapi_async_project\app\models\product.py" />
     <Compile Include="fastapi_async_project\app\models\__init__.py" />
     <Compile Include="fastapi_async_project\app\routers\product.py" />
+    <Compile Include="fastapi_async_project\app\routers\__init__.py" />
     <Compile Include="fastapi_async_project\app\schemas\product.py" />
     <Compile Include="fastapi_async_project\app\schemas\__init__.py" />
     <Compile Include="fastapi_async_project\app\services\product.py" />
     <Compile Include="fastapi_async_project\app\__init__.py" />
     <Compile Include="FAST_API.py" />
+    <Compile Include="Middleware\main.py" />
+    <Compile Include="Middleware\middle\mdlware.py" />
+    <Compile Include="Middleware\middle\__init__.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="fastapi_async_project\" />
@@ -42,17 +50,24 @@
     <Folder Include="fastapi_async_project\app\" />
     <Folder Include="fastapi_async_project\app\core\" />
     <Folder Include="fastapi_async_project\app\models\" />
+    <Folder Include="fastapi_async_project\app\middleware\" />
     <Folder Include="fastapi_async_project\app\services\" />
     <Folder Include="fastapi_async_project\app\routers\" />
     <Folder Include="fastapi_async_project\app\schemas\" />
+    <Folder Include="contextlib\" />
+    <Folder Include="Middleware\" />
+    <Folder Include="Middleware\middle\" />
+    <Folder Include="sql_model\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fastapi_async_project\.env" />
     <Content Include="fastapi_async_project\alembic.ini" />
     <Content Include="fastapi_async_project\alembic\README" />
     <Content Include="fastapi_async_project\alembic\script.py.mako" />
-    <Content Include="fastapi_async_project\app\products.db" />
     <Content Include="fastapi_async_project\Notes.txt" />
+    <Content Include="fastapi_async_project\products.db" />
+    <Content Include="Middleware\Notes.txt" />
+    <Content Include="sql_model\Notes.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
