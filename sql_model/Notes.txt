@@ -1,0 +1,42 @@
+﻿:SQLModel हा Python library आहे जो Pydantic + SQLAlchemy यांना एकत्र आणतो.
+:SQLModel = Database Model + Pydantic Model एकाच class मध्ये
+:SQLAlchemy मध्ये आपण database table साठी वेगळा model आणि API validation साठी वेगळा Pydantic model लिहितो.
+:SQLModel वापरल्यावर दोन्ही कामे एका model मधून करता येतात.
+:SQLModel म्हणजे SQLAlchemy चा replacement नाही.
+:SQLModel internally SQLAlchemy वर आधारित आहे.
+
+----------------------------------------------------------------------------------------------------------
+SQLModel vs SQLAlchemy
+Feature						SQLAlchemy			SQLModel
+Database ORM				✅					✅
+Pydantic validation			Separate			Built-in integration
+FastAPI friendly			✅					✅
+Code						तुलनेने जास्त			कमी
+Flexibility					खूप जास्त				सोपी
+Large production projects	✅					✅
+Learning					थोडे complex			तुलनेने easy
+----------------------------------------------------------------------------------------------------------
+SQLModel internally काय करतं?
+class Product(SQLModel, table=True)
+              │
+              ├──────── Pydantic features
+              │
+              └──────── SQLAlchemy ORM features
+म्हणून SQLModel मध्ये तुम्हाला Pydantic-style validation आणि SQLAlchemy-style ORM functionality मिळते.
+:table=True tells SQLModel that the class should represent a database table.
+---------------------------------------------------------------------------------------------------------
+What is the difference between SQLAlchemy Model and Pydantic Model
+तुम्ही सांगू शकता:
+Pydantic models are mainly used for request validation and response serialization in FastAPI, while SQLAlchemy models represent database tables and are used for ORM operations.
+आणि SQLModel बद्दल:
+SQLModel integrates Pydantic and SQLAlchemy concepts into a single model, reducing duplication, while still allowing separate schemas when needed.
+------------------------------------------------------------------------------------------------------
+Convert model	    model_validate()
+Convert to dict	    model_dump()
+PATCH	            exclude_unset=True
+
+
+
+
+
+
