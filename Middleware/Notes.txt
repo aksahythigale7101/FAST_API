@@ -1,0 +1,101 @@
+﻿Middleware : Middleware is a function/code that runs between the incoming Request and the outgoing Response.
+           :Middleware is a component that processes an HTTP request before it reaches the endpoint and can also process
+            the response before it is returned to the client.
+FastAPI request flow:
+
+			Client
+			 ↓
+		HTTP Request
+			 ↓
+		Middleware
+			 ↓
+		Router / Endpoint
+             ↓
+		Business Logic
+			 ↓
+		Response
+			 ↑
+		Middleware
+             ↑
+	    Client
+म्हणजे Middleware ला request endpoint कडे जाण्यापूर्वी आणि response client कडे जाण्यापूर्वी intercept करता येतो.
+--------------------------------------------------------------------------------------------------------------
+Why use middleware?
+Logging,Timing,CORS,Headers,Request ID,Authentication/security checks,Monitoring
+------------------------------------------------------------------------------------------------------------
+What is ASGI middleware?
+    ASGI level वर application ला wrap करणारा middleware.
+What is CORS middleware?
+    Cross-Origin HTTP requests नियंत्रित करण्यासाठी वापरले जाते.
+------------------------------------------------------------------------------------------------------------
+:request contains information about the incoming HTTP request.
+:call_next()-Send this request to the next middleware / actual FastAPI endpoint and get the response.
+:@app.middleware("http")--"हा function HTTP middleware म्हणून वापर."
+Method:async def my_middleware(request: Request, call_next):
+   इथे दोन important parameters आहेत.
+   request:Client कडून आलेली request.   
+   call_next(request):"Request पुढच्या middleware/endpoint कडे पाठव."
+-------------------------------------------------------------------------------------------------------------
+ :Built-in Middleware:
+                    ├── CORSMiddleware                         -- Cross-origin requests
+			        ├── GZipMiddleware                         -- HTTP → HTTPS redirect
+					├── HTTPSRedirectMiddleware				   -- Allowed Host headers restrict
+					├── TrustedHostMiddleware				   -- Response compression
+					└── SessionMiddleware					   -- Session support
+add_middleware() काय करते?
+                      :Application च्या middleware stack मध्ये middleware add करणे.
+----------------------------------------------------------------------------------------------------------------------
+BaseHTTPMiddleware म्हणजे काय?
+            :BaseHTTPMiddleware हा Starlette मधला base class आहे, जो FastAPI मध्ये custom HTTP middleware तयार करण्यासाठी वापरता येतो
+-----------------------------------------------------------------------------------------------------------------------
+Middleware Ordering in FastAPI
+ :Middleware Ordering म्हणजे application मध्ये multiple middleware असतील तर ते कोणत्या क्रमाने execute होतील हे.
+Request: बाहेरून आत >>>3 → 2 → 1 → Endpoint
+Response: आतून बाहेर >>>Endpoint → 1 → 2 → 3
+          ┌──────────────────────┐
+          │   Middleware 3       │
+          │  ┌────────────────┐  │
+          │  │ Middleware 2   │  │
+          │  │ ┌────────────┐ │  │
+          │  │ │Middleware 1│ │  │
+          │  │ │ ┌────────┐ │ │  │
+          │  │ │ │Endpoint│ │ │  │
+          │  │ │ └────────┘ │ │  │
+          │  │ └────────────┘ │  │
+          │  └────────────────┘  │
+          └──────────────────────┘
+-------------------------------------------------------------------------------------------------------------------
+ASGI = Asynchronous Server Gateway Interface
+    :ASGI हा server आणि Python web application यांच्यात communication करण्याचा interface/protocol आहे.
+    :Pure ASGI middleware provides lower-level control over the ASGI scope, receive, and send interfaces.
+    :BaseHTTPMiddleware easy आहे, पण Pure ASGI मध्ये request आणि response च्या low-level events वर direct control मिळतो.
+scope:scope contains metadata about the current connection/request, such as HTTP method, path, headers and request type.
+receive:receive is an async callable used to receive ASGI events from the server, such as HTTP request body events.
+send:send is an async callable used to send ASGI events to the client, such as response headers and response body.
+1. ASGI = Async Server Gateway Interface
+2. Pure ASGI Middleware uses:
+   scope + receive + send
+3. __call__() is the middleware entry point
+4. scope = request/connection metadata
+5. receive = incoming events
+   send    = outgoing events
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
