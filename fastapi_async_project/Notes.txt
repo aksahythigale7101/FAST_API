@@ -80,4 +80,24 @@ setattr(object, attribute, value)
 tags=["Products"]:Swagger UI मध्ये endpoints Products नावाच्या group खाली दिसतील. get,put paych,post etc..
 Depends(get_db):Dependency Injection साठी.
                 :"मला database session पाहिजे; get_db() वापरून तो तयार करून दे."
-              
+---------------------------------------------------------------------------------------------------------------
+---from contextlib import asynccontextmanager              
+asynccontextmanager is a decorator from Python's contextlib module used to create asynchronous context managers.
+           It allows us to define setup and cleanup logic around an async with block using yield.
+           It is commonly used for managing asynchronous resources and FastAPI lifespan events.
+
+asynccontextmanager हा contextlib मधला decorator आहे. तो asynchronous context manager तयार करण्यासाठी वापरला जातो.
+           yield च्या आधी setup/startup आणि yield नंतर cleanup/shutdown logic ठेवू शकतो.
+----------------------------------------------------------------------------------------------------
+return vs yield — interview point
+return          	    yield
+Function समाप्त करतो	    Function pause करतो
+एकदा value देतो	        Values/control progressively देऊ शकतो
+Normal function	        Generator बनवतो
+Resume होत नाही	        Resume होऊ शकतो
+return value	        yield value
+-------------------------------------------------------------------------------------------------------
+Middlware
+Request ID	प्रत्येक request ला unique ID
+Logging + Timing	कोणती API call झाली + किती वेळ लागला
+CORS	Frontend → FastAPI browser requests
