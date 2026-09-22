@@ -22,7 +22,6 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="contextlib\main.py" />
     <Compile Include="fastapi_async_project\alembic\env.py" />
     <Compile Include="fastapi_async_project\app\core\config.py" />
     <Compile Include="fastapi_async_project\app\core\database.py" />
@@ -54,7 +53,6 @@
     <Folder Include="fastapi_async_project\app\services\" />
     <Folder Include="fastapi_async_project\app\routers\" />
     <Folder Include="fastapi_async_project\app\schemas\" />
-    <Folder Include="contextlib\" />
     <Folder Include="Middleware\" />
     <Folder Include="Middleware\middle\" />
     <Folder Include="sql_model\" />
