@@ -1,0 +1,50 @@
+﻿:WebSocket is a persistent, two-way communication channel between client and server.
+  WebSocket म्हणजे Client आणि Server मध्ये एकदा connection establish झाल्यावर दोघेही एकमेकांना कधीही data send करू शकतात.
+              WebSocket Connection
+        ┌────────────────────────────┐
+        │                            │
+Client  │  ←────── Data ───────────  │ Server
+        │  ─────── Data ──────────→  │
+        │                            │
+        └────────────────────────────┘
+Normal HTTP:                             WebSocket:
+    Client → Request → Server                   Client ↔ Server
+    Client ← Response ← Server                  Connection remains open
+    Connection/request cycle
+----------------------------------------------------------------------------------------------------------------------
+HTTP vs WebSocket
+| Feature                      | HTTP                        | WebSocket              |
+| ---------------------------- | --------------------------- | ---------------------- |
+| Communication                | Request/Response            | Two-way                |
+| Connection                   | Usually request-based       | Persistent             |
+| Server can initiate message? | Not directly                | Yes                    |
+| Real-time                    | Not ideal                   | Excellent              |
+| Chat                         | Polling/extra mechanisms    | Natural fit            |
+| Live notification            | Polling/SSE etc.            | Excellent              |
+| Overhead                     | Higher for repeated polling | Lower after connection |
+| Protocol                     | HTTP                        | WebSocket (`ws`/`wss`) |
+------------------------------------------------------------------------------------------------------------------
+websocket
+    |
+    ├── accept()-----------------This accepts the WebSocket connection.
+    ├── receive_text()
+    ├── send_text()
+    ├── receive_json()
+    ├── send_json()
+    └── close()
+--------------------------------------------------------------------------------------------------------------
+Full-duplex म्हणजे काय?
+Full-duplex means both sides can send data independently.
+        Client ─────────→ Server
+        Client ←───────── Server
+At the same time:
+        Client ───── message ─────→
+        Client ←──── message ────── Server
+Marathi:
+    Full-duplex म्हणजे Client आणि Server दोघांनाही एकाच connection वर independent communication करता येते.
+------------------------------------------------------------------------------------------------------------------------
+HTTP:
+    HTTP follows a request-response model, while WebSocket provides persistent two-way communication.
+        WebSocket is better suited for applications where the server needs to push real-time updates to clients.
+
+
