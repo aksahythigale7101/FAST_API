@@ -17,4 +17,4 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
-print(" URL OD DATABASE:", os.getenv("DATABASE_URL"))
+#print(" URL OD DATABASE:", os.getenv("DATABASE_URL"))
