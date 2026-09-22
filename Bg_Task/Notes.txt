@@ -1,0 +1,43 @@
+﻿What is a Background Task?
+      :FastAPI BackgroundTasks allows lightweight tasks to run after the response has been sent to the client.
+      :A background task is work that FastAPI starts after sending the HTTP response to the client.
+      :Background task म्हणजे user ला response लगेच देऊन, response नंतर काही छोटं काम execute करणे.
+
+Normal API                                    With Background Task                            
+Client                                              Client
+  |                                                     |
+  | POST /register                                      | POST /register
+  ↓                                                     ↓
+FastAPI                                             FastAPI
+  |                                                     |  
+  | Save user                                           | Save user
+  |                                                     |
+  | Send email                                          |
+  |                                                 Response 200/201                                    
+  | Generate report                                     |
+  |                                                     |---- Background Task
+  ↓                                                     ↓
+Response
+                                                        |       ↓
+                                                        |     Send email
+                                                        |     Generate log
+                                                        |     Cleanup
+----------------------------------------------------------------------------------------------------------------
+:Don't assume:"Background task means a separate thread."
+That's not always true.
+:FastAPI's BackgroundTasks are implemented through Starlette's background-task mechanism.
+:For normal synchronous background functions, execution can use a thread pool.
+:For async functions, they are awaited.
+---------------------------------------------------------------------------------------------------------------
+:BackgroundTasks:FastAPI/Starlette request lifecycle integration.
+:asyncio.create_task():Schedules a coroutine on the current event loop.
+
+
+
+
+
+
+
+
+
+
