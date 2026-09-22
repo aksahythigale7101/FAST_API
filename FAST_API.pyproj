@@ -22,6 +22,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Bg_Task\main.py" />
+    <Compile Include="Dependency_Injection\Depnds\Globls.py" />
+    <Compile Include="Dependency_Injection\Depnds\main.py" />
     <Compile Include="fastapi_async_project\alembic\env.py" />
     <Compile Include="fastapi_async_project\app\core\config.py" />
     <Compile Include="fastapi_async_project\app\core\database.py" />
@@ -41,8 +44,15 @@
     <Compile Include="Middleware\main.py" />
     <Compile Include="Middleware\middle\mdlware.py" />
     <Compile Include="Middleware\middle\__init__.py" />
+    <Compile Include="WebSocket\clint.py" />
+    <Compile Include="WebSocket\main.py" />
+    <Compile Include="WebSocket\MulitpleClients\client2.py" />
+    <Compile Include="WebSocket\MulitpleClients\client3.py" />
+    <Compile Include="WebSocket\MulitpleClients\client1.py" />
+    <Compile Include="WebSocket\MulitpleClients\module.py" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Dependency_Injection\Depnds\" />
     <Folder Include="fastapi_async_project\" />
     <Folder Include="fastapi_async_project\alembic\" />
     <Folder Include="fastapi_async_project\alembic\versions\" />
@@ -55,17 +65,24 @@
     <Folder Include="fastapi_async_project\app\schemas\" />
     <Folder Include="Middleware\" />
     <Folder Include="Middleware\middle\" />
+    <Folder Include="Dependency_Injection\" />
+    <Folder Include="Bg_Task\" />
+    <Folder Include="WebSocket\" />
     <Folder Include="sql_model\" />
+    <Folder Include="WebSocket\MulitpleClients\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Bg_Task\Notes.txt" />
+    <Content Include="Dependency_Injection\notes.txt" />
     <Content Include="fastapi_async_project\.env" />
     <Content Include="fastapi_async_project\alembic.ini" />
     <Content Include="fastapi_async_project\alembic\README" />
     <Content Include="fastapi_async_project\alembic\script.py.mako" />
+    <Content Include="fastapi_async_project\app\products.db" />
     <Content Include="fastapi_async_project\Notes.txt" />
-    <Content Include="fastapi_async_project\products.db" />
     <Content Include="Middleware\Notes.txt" />
     <Content Include="sql_model\Notes.txt" />
+    <Content Include="WebSocket\Notes.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
