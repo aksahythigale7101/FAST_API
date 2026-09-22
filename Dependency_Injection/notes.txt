@@ -1,0 +1,37 @@
+﻿What is Dependency Injection?
+     :Instead of a function creating the things it needs, we provide those things to the function.
+     :एखाद्या function ला काम करण्यासाठी काही object/data/service लागतो, तर तो function स्वतः तयार न करता FastAPI
+      तो automatically provide करते.
+     :"Dependency Injection is a mechanism in FastAPI where reusable dependencies are declared using Depends(), and FastAPI automatically resolves and injects their results 
+      into path operations or other dependencies."
+     :Depends() declares that a parameter depends on another callable. FastAPI executes that dependency, resolves its dependencies
+      ,and provides the result to the endpoint.
+      
+----------------------------------------------------------------------------------------------------------------------
+Why not simply call the function?
+     :"This is a dependency. You manage its execution and lifecycle."
+Why use Dependency Injection?
+        Reusability
+        Separation of concerns
+        Testability
+        Maintainability
+        Lifecycle management
+        Dependency chaining
+
+Why use yield in a dependency
+    :yield allows a dependency to provide a resource and perform cleanup after the request finishes
+What is a global dependency in FastAPI?"
+    :A global dependency is a dependency registered at the FastAPI application level using the dependencies parameter.
+     It is automatically executed for all routes in the application. It is commonly used for cross-cutting concerns such 
+     as authentication, authorization, API-key validation, and common request checks.
+    :Global dependency म्हणजे application level वर define केलेली dependency जी application मधील सर्व routes वर automatically लागू होते.
+      ती authentication, authorization किंवा common validation सारख्या कामांसाठी वापरली जाते.
+----------------------------------------------------------------------------------------------------------------------
+Global Dependency = FastAPI() level
+Router Dependency = APIRouter() level
+Endpoint Dependency = path operation level
+
+
+
+
+
