@@ -10,3 +10,9 @@ App.jsx म्हणजे काय?
 npm run dev
 http://localhost:5173
 --------------------------------------------------------------------------------
+MongoDB मध्ये JSON वापरतो का?
+   MongoDB internally BSON वापरते.  BSON = Binary JSON0
+MongoDB stores documents in BSON format, which is a binary representation of JSON-like documents.
+
+:MongoDB is a NoSQL, document-oriented database. It stores data as BSON documents inside collections. Unlike relational databases such as MySQL, MongoDB provides a flexible     document structure and supports nested objects and arrays. Each document has a unique _id field.
+:MongoDB हा NoSQL document-oriented database आहे. त्यामध्ये data tables आणि rows ऐवजी collections आणि documents मध्ये store केला जातो. Documents BSON format मध्ये store होतात आणि _id   हा प्रत्येक document चा unique identifier असतो.
