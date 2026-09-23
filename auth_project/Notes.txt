@@ -7,3 +7,56 @@ password = 123456											 GET /users       → Admin only
 → YES
 → Authentication successful
 ---------------------------------------------------------------------------------------------
+:FastAPI च्या OAuth2 password flow मध्ये login credentials username आणि password form data म्हणून पाठवले जातात;
+    OAuth2PasswordBearer Bearer token security scheme OpenAPI/Swagger मध्ये integrate करतो.
+--------------------------------------------------------------------------------------------------------------
+:JWT म्हणजे काय?
+ JSON Web Token ---ex:xxxxx.yyyyy.zzzz  ----3parts--HEADER.PAYLOAD.SIGNATURE
+:Signature
+Secret key वापरून signature तयार होते.
+Important:
+JWT encrypted नसतो; signed असतो.
+म्हणून JWT payload मध्ये password ठेवायचा नाही. FastAPI docs देखील JWT payload readable असू शकतो आणि
+     signature त्याची authenticity verify करण्यासाठी वापरली जाते असे स्पष्ट करतात
+---------------------------------------------------------------------------------------------------------------
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+Token चोरी झाला तरी तो indefinitely valid राहू नये.
+----------------------------------------------------------------------------------------------------------
+auth_project/
+│
+├── app/
+│   │
+│   ├── main.py
+│   │
+│   ├── core/
+│   │   ├── config.py
+│   │   └── security.py
+│   │
+│   ├── db/
+│   │   └── database.py
+│   │
+│   ├── models/
+│   │   └── user.py
+│   │
+│   ├── schemas/
+│   │   └── user.py
+│   │
+│   ├── services/
+│   │   └── auth_service.py
+│   │
+│   ├── repositories/
+│   │   └── user_repository.py
+│   │
+│   ├── dependencies/
+│   │   └── auth.py
+│   │
+│   └── routers/
+│       ├── auth.py
+│       └── users.py
+│
+├── .env
+├── requirements.txt
+└── README.md using this architue i can done token create and verify and creeate user so what can i do next
+
+
+
