@@ -1,4 +1,11 @@
-﻿Jinja2 हा Python-based template engine आहे.
+﻿Fronend Server: python -m http.server 5500
+url:>cd frontend> http://127.0.0.1:5500
+
+Backend Server: uvicorn app.main:app --reload
+url: http://127.0.0.1:8000 or http://127.0.0.1:8000/docs
+
+----------------------------------------------------------------------------------------------------
+Jinja2 हा Python-based template engine आहे.
 
 FastAPI
    ↓
