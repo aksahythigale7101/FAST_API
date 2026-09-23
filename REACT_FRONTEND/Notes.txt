@@ -1,4 +1,18 @@
-﻿index.html काय करतो
+﻿1)React म्हणजे काय
+   :React ही Facebook (Meta) ने बनवलेली एक JavaScript लायब्ररी आहे, जी वेबसाईटचा UI (User Interface) बनवण्यासाठी वापरली जाते.
+2)वेगळी .js फाईल का दिसत नाही — .jsx का वापरतात
+   पारंपरिक पद्धतीत HTML आणि JS वेगळे ठेवायचे, हा नियम React मोडून टाकतं. React मध्ये HTML सारखा दिसणारा कोड थेट JavaScript फाईलमध्येच लिहितात — याला JSX म्हणतात.
+:हे बघायला HTML सारखं दिसतंय, पण प्रत्यक्षात हा JavaScript कोड आहे — .jsx फाईल एक्सटेंशन (Vite/Babel सारखी टूल्स) हा कोड घेऊन खऱ्या JavaScript मध्ये रूपांतरित (compile) करते, जे नंतर browser ला समजतं.
+फायदा: एकाच जागी — कशी दिसेल (UI) आणि काय करेल (लॉजिक) दोन्ही एकत्र लिहिता येतं, त्यामुळे संबंधित कोड शोधायला त्रास होत नाही.
+---------------------------------------------------------------------------------------------------------------------------
+main.jsx हा फक्त एक "जोडणारा पूल" आहे — यात तुम्हाला काहीही बदलायची गरज नसते, ती एकदाच सेटअप होते आणि तशीच राहते.
+index.html (रिकामा <div id="root">)
+        ↓
+main.jsx (App.jsx शोधतो आणि त्या div मध्ये टाकतो)
+        ↓
+App.jsx (खरं Product Management UI आणि लॉजिक)
+--------------------------------------------------------------------------------------------------------------
+index.html काय करतो
   React मध्ये traditional HTML application सारखे सगळे UI index.html मध्ये लिहायचे नसते.
 ----------------------------------------------------------------------------------------
 main.jsx काय करतो
@@ -16,3 +30,9 @@ MongoDB stores documents in BSON format, which is a binary representation of JSO
 
 :MongoDB is a NoSQL, document-oriented database. It stores data as BSON documents inside collections. Unlike relational databases such as MySQL, MongoDB provides a flexible     document structure and supports nested objects and arrays. Each document has a unique _id field.
 :MongoDB हा NoSQL document-oriented database आहे. त्यामध्ये data tables आणि rows ऐवजी collections आणि documents मध्ये store केला जातो. Documents BSON format मध्ये store होतात आणि _id   हा प्रत्येक document चा unique identifier असतो.
+-------------------------------------------------------------------------------------------------------------------------
+React Folder Code explaination:
+1)App.jsx:
+     useState आणि useEffect हे React चे Hooks आहेत — React मधली स्पेशल फंक्शन्स जी component ला "memory" (state) ठेवायला आणि विशिष्ट वेळी काहीतरी करायला मदत करतात
+import "./App.css" — स्टायलिंग फाईल जोडली, जेणेकरून CSS लागू होईल
+2)const API_URL = "http://127.0.0.1:8000/products";हा तुमच्या FastAPI बॅकएंडचा पत्ता — पुढे सगळीकडे हाच वापरला जातो, त्यामुळे बदलायचं झाल्यास एकाच जागी बदलावं लागतं.
