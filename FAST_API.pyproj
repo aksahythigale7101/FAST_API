@@ -169,6 +169,7 @@
     <Content Include="REACT_FRONTEND\front\frontend\src\index.css" />
     <Content Include="REACT_FRONTEND\front\frontend\src\main.jsx" />
     <Content Include="REACT_FRONTEND\front\frontend\vite.config.js" />
+    <Content Include="REACT_FRONTEND\RectNotes.txt" />
     <Content Include="REACT_FRONTEND\Notes.txt" />
     <Content Include="requirements.txt" />
     <Content Include="sql_model\Notes.txt" />
