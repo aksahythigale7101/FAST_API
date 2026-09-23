@@ -1,0 +1,9 @@
+﻿Authentication = "Who are you?"               Authorization = "What are you allowed to do?"
+Login:													     Akshay → normal user		
+email = akshay@gmail.com									 Admin  → admin
+password = 123456											 GET /users       → Admin only
+															 GET /profile     → Logged-in users
+→ Is this really Akshay?									 DELETE /users/5  → Admin only	
+→ YES
+→ Authentication successful
+---------------------------------------------------------------------------------------------
