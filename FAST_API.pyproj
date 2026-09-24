@@ -22,6 +22,17 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="auth_project\app\core\config.py" />
+    <Compile Include="auth_project\app\core\security.py" />
+    <Compile Include="auth_project\app\db\database.py" />
+    <Compile Include="auth_project\app\dependencies\auth.py" />
+    <Compile Include="auth_project\app\main.py" />
+    <Compile Include="auth_project\app\models\user.py" />
+    <Compile Include="auth_project\app\repositories\user_repository.py" />
+    <Compile Include="auth_project\app\routers\auth.py" />
+    <Compile Include="auth_project\app\routers\users.py" />
+    <Compile Include="auth_project\app\schemas\user.py" />
+    <Compile Include="auth_project\app\services\auth_service.py" />
     <Compile Include="Bg_Task\main.py" />
     <Compile Include="Dependency_Injection\Depnds\Globls.py" />
     <Compile Include="Dependency_Injection\Depnds\main.py" />
@@ -84,6 +95,15 @@
     <Compile Include="WebSocket\MulitpleClients\module.py" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="auth_project\app\" />
+    <Folder Include="auth_project\app\core\" />
+    <Folder Include="auth_project\app\db\" />
+    <Folder Include="auth_project\app\models\" />
+    <Folder Include="auth_project\app\dependencies\" />
+    <Folder Include="auth_project\app\routers\" />
+    <Folder Include="auth_project\app\repositories\" />
+    <Folder Include="auth_project\app\services\" />
+    <Folder Include="auth_project\app\schemas\" />
     <Folder Include="Dependency_Injection\Depnds\" />
     <Folder Include="fastapi_async_project\" />
     <Folder Include="fastapi_async_project\alembic\" />
@@ -112,6 +132,7 @@
     <Folder Include="Middleware\middle\" />
     <Folder Include="Dependency_Injection\" />
     <Folder Include="Bg_Task\" />
+    <Folder Include="auth_project\" />
     <Folder Include="REACT_FRONTEND\" />
     <Folder Include="REACT_FRONTEND\alembic\" />
     <Folder Include="REACT_FRONTEND\alembic\versions\" />
@@ -132,6 +153,8 @@
     <Folder Include="WebSocket\MulitpleClients\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="auth_project\.env" />
+    <Content Include="auth_project\Notes.txt" />
     <Content Include="Bg_Task\Notes.txt" />
     <Content Include="Dependency_Injection\notes.txt" />
     <Content Include="fastapi_async_project\.env" />
