@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="9" time="0.157" timestamp="2026-09-24T16:19:41.073689+05:30" hostname="DESKTOP-OE611OR"><testcase classname="app.test_calculator" name="test_add" time="0.003" /><testcase classname="app.test_calculator" name="test_subtract" time="0.001" /><testcase classname="app.test_calculator" name="test_greater" time="0.001"><failure message="assert False is True&#10; +  where False = greater(50, 100)">def test_greater():
+&gt;       assert greater(50, 100) is True
+E       assert False is True
+E        +  where False = greater(50, 100)
+
+app\test_calculator.py:15: AssertionError</failure></testcase><testcase classname="app.test_calculator" name="test_even_number" time="0.001" /><testcase classname="app.test_calculator" name="test_odd_number" time="0.001" /><testcase classname="app.test_calculator" name="test_user" time="0.001" /><testcase classname="app.test_calculator" name="test_user_username" time="0.002"><failure message="AssertionError: assert 'akshay' == 'aditya'&#10;  &#10;  #x1B[0m#x1B[91m- aditya#x1B[39;49;00m#x1B[90m#x1B[39;49;00m&#10;  #x1B[92m+ akshay#x1B[39;49;00m#x1B[90m#x1B[39;49;00m">user = {'id': 1, 'username': 'akshay', 'email': 'akshay@gmail.com'}
+
+    def test_user_username(user):
+&gt;       assert user["username"] == "aditya"
+E       AssertionError: assert 'akshay' == 'aditya'
+E         
+E         #x1B[0m#x1B[91m- aditya#x1B[39;49;00m#x1B[90m#x1B[39;49;00m
+E         #x1B[92m+ akshay#x1B[39;49;00m#x1B[90m#x1B[39;49;00m
+
+app\test_calculator.py:31: AssertionError</failure></testcase><testcase classname="app.test_calculator" name="test_user_email" time="0.001" /><testcase classname="app.test_calculator" name="test_database" time="0.001" /></testsuite></testsuites>

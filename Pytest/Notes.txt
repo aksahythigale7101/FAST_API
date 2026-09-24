@@ -1,0 +1,75 @@
+﻿Pytest : pytest is a Python testing framework used to automatically test your Python code.
+       :आपण application मध्ये code लिहितो. तो code manually check करण्याऐवजी automatically verify करण्यासाठी pytest वापरतो.
+-----------------------------------------------------------------------------------------------------------
+assert: हा condition True असलाच पाहिजे
+--------------------------------------------------------------------------------------------------------
+how to call---PS E:\GitProject\FASTAPI\FastAPI\Pytest\app> pytest 
+-----------------------------------------------------------------------------------------------------
+Run specfic function using path
+PS E:\GitProject\FASTAPI\FastAPI\Pytest\app> pytest pytest_demo.py::test_divisor_zero -v
+-s फ्लॅग महत्त्वाचा आहे — त्याशिवाय print() स्टेटमेंट्स दिसणार नाहीत. test_divisor_zero -v -s
+-v=Verbose Mode
+------------------------------------------------------------------------------------------------------------.
+pytest.raises() म्हणजे: "या code block मध्ये हा specific exception येणे expected आहे."
+---------------------------------------------------------------------------------------------------
+Fixture Scope म्हणजे काय?
+  :A fixture is a reusable piece of test setup/data that pytest provides to your test function.
+  :Scope ठरवतं की एखादं fixture किती वेळा तयार (create) होईल आणि किती काळ टिकेल (reuse होईल). 
+    डिफॉल्ट स्कोप असतो function — म्हणजे प्रत्येक टेस्टसाठी fixture नव्याने तयार होतं.
+@pytest.fixture(scope="function")   # डिफॉल्ट
+@pytest.fixture(scope="class")
+@pytest.fixture(scope="module")
+@pytest.fixture(scope="package")
+@pytest.fixture(scope="session")
+Scope	         Fixture                                कधी तयार होतं	उदाहरण वापर
+function        (डिफॉल्ट)	प्रत्येक टेस्ट फंक्शनसाठी नव्याने	        साधा data, प्रत्येक टेस्टला fresh हवं असेल तर
+class	        प्रत्येक टेस्ट क्लाससाठी एकदाच	                क्लासमधल्या सगळ्या टेस्ट्सना same setup लागत असेल
+module	        प्रत्येक फाईलसाठी एकदाच	                    त्या फाईलमधल्या सगळ्या टेस्ट्सना same resource लागत असेल
+package	        प्रत्येक पॅकेजसाठी (फोल्डर) एकदाच	            कमी वापरलं जातं
+session	        संपूर्ण pytest रनमध्ये एकदाच	                Database connection, server सुरू करणे — जड (heavy) गोष्टी
+--------------------------------------------------------------------------------------------------------------
+Parametrization म्हणजे काय?
+ !Parametrization allows us to run the same test with multiple sets of input data.
+ !@pytest.mark.parametrize():हा test multiple input sets सह execute कर.
+
+----------------------------------------------------------------------------------------------------------
+conftest.py म्हणजे:
+ |Shared pytest fixtures ठेवण्यासाठीची special file.
+ |Pytest conftest.py automatically discover करतो.
+ |conftest.py is a special pytest configuration file commonly used to define shared fixtures that can be 
+           automatically discovered by pytest.
+---------------------------------------------------------------------------------------------------------
+What is the default fixture scope?
+ ! function
+-------------------------------------------------------------------------------------------------------------
+Unit Test vs Integration Test
+Unit Test = एक छोटा भाग स्वतंत्रपणे test करणे.  def add(a, b):return a + b
+Integration Test = दोन किंवा अधिक parts एकत्र काम करत आहेत का ते test करणे. def test_add():    assert add(2, 3) == 5
+---------------------------------------------------------------------------------------------------------------
+Mocking:Testing करताना प्रत्येक वेळेस real payment API call करणे चुकीचे.त्याऐवजी आपण fake object वापरतो.याला:Mocking म्हणतात.
+       :Mocking means replacing a real dependency with a fake object during testing.
+Mock:from unittest.mock import Mock
+MagicMock:from unittest.mock import MagicMock
+Q1. What is mocking?
+Mocking is the technique of replacing a real dependency with a controlled fake object during testing.
+Q2. Why do we mock external APIs?
+To make tests fast, deterministic, isolated, and independent of external services.
+Q3. What is patch()?
+patch() temporarily replaces an object with a mock during a test.
+Q4. Difference between Mock and MagicMock?
+Mock provides standard mocking functionality, while MagicMock additionally supports Python magic methods.
+---------------------------------------------------------------------------------------------------------------
+Coverage :generate test report
+Pytest Report : हे manually पाहण्यापेक्षा आपण report generate करू शकतो.
+pip install pytest-html
+pytest --html=report.html --self-contained-html
+pytest --html=report.html  !HTML Report Generate कर
+--------------------------------------------------------------------------------------------------------
+AAA Pattern
+A → Arrange     Test साठी data तयार करणे.      ex:  def test_add():(a = 10b = 20)
+A → Act         Function call करणे.           ex:result = add(a, b)
+A → Assert      Expected result verify करणे. ex:assert result == 30
+----------------------------------------------------------------------------------------------------------
+TestClient म्हणजे काय?
+ Python code मधून FastAPI endpoint ला request पाठवण्यासाठी वापरलेला testing client.
+
