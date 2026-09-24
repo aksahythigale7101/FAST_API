@@ -57,6 +57,9 @@ auth_project/
 ├── .env
 ├── requirements.txt
 └── README.md using this architue i can done token create and verify and creeate user so what can i do next
-
+---------------------------------------------------------------------------------------------------------------
+API Key म्हणजे काय?
+  :API Key म्हणजे client ला दिलेला एक secret string/token.
+ex:X-API-Key: my-secret-key-123
 
 
