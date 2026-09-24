@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>bce38d65-aae3-4054-a406-a29a5882df84</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>FAST_API.py</StartupFile>
+    <StartupFile>Pytest\Test\TestApi.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -71,6 +71,12 @@
     <Compile Include="Middleware\main.py" />
     <Compile Include="Middleware\middle\mdlware.py" />
     <Compile Include="Middleware\middle\__init__.py" />
+    <Compile Include="Pytest\app\calculator.py" />
+    <Compile Include="Pytest\app\pytest_demo.py" />
+    <Compile Include="Pytest\app\test_calculator.py" />
+    <Compile Include="Pytest\app\__init__.py" />
+    <Compile Include="Pytest\conftest.py" />
+    <Compile Include="Pytest\Test\TestApi.py" />
     <Compile Include="REACT_FRONTEND\alembic\env.py" />
     <Compile Include="REACT_FRONTEND\alembic\versions\cc2ad9ad8e1b_create_products_table.py" />
     <Compile Include="REACT_FRONTEND\app\core\config.py" />
@@ -133,6 +139,9 @@
     <Folder Include="Dependency_Injection\" />
     <Folder Include="Bg_Task\" />
     <Folder Include="auth_project\" />
+    <Folder Include="Pytest\" />
+    <Folder Include="Pytest\app\" />
+    <Folder Include="Pytest\Test\" />
     <Folder Include="REACT_FRONTEND\" />
     <Folder Include="REACT_FRONTEND\alembic\" />
     <Folder Include="REACT_FRONTEND\alembic\versions\" />
@@ -173,6 +182,9 @@
     <Content Include="FronEndJS\Notes.txt" />
     <Content Include="Middleware\Notes.txt" />
     <Content Include="Notes.txt" />
+    <Content Include="Pytest\Notes.txt" />
+    <Content Include="Pytest\report.html" />
+    <Content Include="Pytest\report.xml" />
     <Content Include="REACT_FRONTEND\alembic.ini" />
     <Content Include="REACT_FRONTEND\alembic\README" />
     <Content Include="REACT_FRONTEND\alembic\script.py.mako" />
