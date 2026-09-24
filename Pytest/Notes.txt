@@ -1,75 +1,1196 @@
-﻿Pytest : pytest is a Python testing framework used to automatically test your Python code.
-       :आपण application मध्ये code लिहितो. तो code manually check करण्याऐवजी automatically verify करण्यासाठी pytest वापरतो.
------------------------------------------------------------------------------------------------------------
-assert: हा condition True असलाच पाहिजे
---------------------------------------------------------------------------------------------------------
-how to call---PS E:\GitProject\FASTAPI\FastAPI\Pytest\app> pytest 
------------------------------------------------------------------------------------------------------
-Run specfic function using path
-PS E:\GitProject\FASTAPI\FastAPI\Pytest\app> pytest pytest_demo.py::test_divisor_zero -v
--s फ्लॅग महत्त्वाचा आहे — त्याशिवाय print() स्टेटमेंट्स दिसणार नाहीत. test_divisor_zero -v -s
--v=Verbose Mode
-------------------------------------------------------------------------------------------------------------.
-pytest.raises() म्हणजे: "या code block मध्ये हा specific exception येणे expected आहे."
----------------------------------------------------------------------------------------------------
-Fixture Scope म्हणजे काय?
-  :A fixture is a reusable piece of test setup/data that pytest provides to your test function.
-  :Scope ठरवतं की एखादं fixture किती वेळा तयार (create) होईल आणि किती काळ टिकेल (reuse होईल). 
-    डिफॉल्ट स्कोप असतो function — म्हणजे प्रत्येक टेस्टसाठी fixture नव्याने तयार होतं.
-@pytest.fixture(scope="function")   # डिफॉल्ट
+﻿# PYTEST — INTERVIEW PREPARATION NOTES
+
+> **Goal:** Quick revision from Pytest basics → advanced concepts → FastAPI testing.
+
+## 📌 QUICK REVISION MAP
+
+1. Pytest & `assert`
+2. Running tests (`pytest`, `-v`, `-s`)
+3. Exceptions with `pytest.raises()`
+4. Fixtures & Fixture Scope
+5. Parametrization
+6. `conftest.py`
+7. Unit Test vs Integration Test
+8. Mocking / Mock / MagicMock / `patch()`
+9. Coverage & HTML Reports
+10. AAA Pattern
+11. FastAPI `TestClient`
+12. Important Commands
+13. Interview Q&A
+
+---
+
+## 1. What is Pytest?
+
+**Pytest** is a Python testing framework used to automatically test and verify Python code.
+
+### Marathi
+
+आपण application मध्ये code लिहितो. तो code manually check करण्याऐवजी **automatically verify/test** करण्यासाठी Pytest वापरतो.
+
+Example:
+
+```python
+def add(a, b):
+    return a + b
+
+```
+
+Test:
+
+```python
+def test_add():
+    assert add(2, 3) == 5
+
+```
+
+---
+
+# 2. What is `assert`?
+
+`assert` वापरून आपण **actual result expected result सारखा आहे का** ते verify करतो.
+
+### Simple meaning
+
+> `assert` condition True असली पाहिजे.
+> Condition False असेल तर test fail होतो.
+
+Example:
+
+```python
+def test_add():
+    result = 10 + 20
+
+    assert result == 30
+
+```
+
+इथे:
+
+```text
+result = 30
+expected = 30
+
+```
+
+म्हणून test PASS.
+
+---
+
+# 3. How to Run Pytest?
+
+Terminal मध्ये project/test folder मध्ये जाऊन:
+
+```bash
+pytest
+
+```
+
+Example:
+
+```text
+PS E:\GitProject\FASTAPI\FastAPI\Pytest\app> pytest
+
+```
+
+Pytest automatically test files आणि test functions discover करून execute करतो.
+
+Common test file naming:
+
+```text
+test_*.py
+*_test.py
+
+```
+
+Common test function naming:
+
+```python
+def test_add():
+    ...
+
+```
+
+---
+
+# 4. Run a Specific Test Function
+
+Specific file मधील specific test function run करण्यासाठी:
+
+```bash
+pytest pytest_demo.py::test_divisor_zero -v
+
+```
+
+Structure:
+
+```text
+pytest FILE_NAME::FUNCTION_NAME
+
+```
+
+Example:
+
+```bash
+pytest test_math.py::test_add -v
+
+```
+
+---
+
+# 5. What is `-v`?
+
+`-v` म्हणजे:
+
+> **Verbose Mode**
+
+यामुळे pytest अधिक detailed output दाखवतो.
+
+```bash
+pytest -v
+
+```
+
+Example output:
+
+```text
+test_math.py::test_add PASSED
+test_math.py::test_subtract PASSED
+test_math.py::test_divide PASSED
+
+```
+
+---
+
+# 6. What is `-s`?
+
+`-s` pytest चा **stdout capturing disable** करतो.
+
+सोप्या भाषेत:
+
+> Test मध्ये `print()` केले असेल आणि ते terminal मध्ये पाहायचे असेल तर `-s` वापरतो.
+
+Example:
+
+```python
+def test_add():
+    result = 10 + 20
+    print("Result:", result)
+
+    assert result == 30
+
+```
+
+Run:
+
+```bash
+pytest -s
+
+```
+
+किंवा:
+
+```bash
+pytest -v -s
+
+```
+
+### Important
+
+`-s` म्हणजे फक्त `print()` output पाहण्यासाठी उपयोगी आहे.
+
+```bash
+pytest test_math.py::test_add -v -s
+
+```
+
+---
+
+# 7. What is `pytest.raises()`?
+
+`pytest.raises()` वापरून आपण **specific exception expected आहे** हे verify करतो.
+
+Meaning:
+
+> "या code block मध्ये हा specific exception येणे expected आहे."
+
+Example:
+
+```python
+import pytest
+
+
+def divide(a, b):
+    return a / b
+
+
+def test_divide_by_zero():
+    with pytest.raises(ZeroDivisionError):
+        divide(10, 0)
+
+```
+
+इथे आपण expect करतो:
+
+```text
+divide(10, 0)
+        ↓
+ZeroDivisionError
+
+```
+
+Exception आली → PASS
+
+Exception आली नाही → FAIL
+
+---
+
+# 8. Fixture म्हणजे काय?
+
+**Fixture** म्हणजे test साठी लागणारा reusable setup/data/resource.
+
+Example:
+
+```python
+import pytest
+
+
+@pytest.fixture
+def user():
+    return {
+        "name": "Akshay",
+        "age": 25
+    }
+
+
+def test_user(user):
+    assert user["name"] == "Akshay"
+
+```
+
+इथे:
+
+```python
+@pytest.fixture
+def user():
+
+```
+
+हा fixture आहे.
+
+Test function मध्ये:
+
+```python
+def test_user(user):
+
+```
+
+`user` fixture automatically मिळतो.
+
+### Simple definition
+
+> Fixture is a reusable piece of test setup/data that pytest provides to test functions.
+
+---
+
+# 9. Fixture Scope म्हणजे काय?
+
+**Scope ठरवतो की fixture किती वेळा create होईल आणि किती tests मध्ये reuse होईल.**
+
+Default scope:
+
+```text
+function
+
+```
+
+---
+
+## Fixture Scopes
+
+| Scope | When created | Typical use |
+|---|---|---|
+| `function` | For every test function | Fresh test data |
+| `class` | Once per test class | Shared class setup |
+| `module` | Once per test module/file | Shared module resource |
+| `package` | Once per package | Package-level resource |
+| `session` | Once per entire pytest run | Heavy resources |
+
+--------------------------------- | ------------------------------ | ---------------------- |
+| function                             | प्रत्येक test function साठी    | Fresh test data        |
+| class                                | प्रत्येक test class साठी       | Class-level setup      |
+| module                               | प्रत्येक test file/module साठी | Shared resource        |
+| package                              | प्रत्येक package साठी          | Package-level resource |
+| session                              | संपूर्ण pytest run मध्ये एकदा  | Heavy resources        |
+
+---
+
+## 9.1 Function Scope
+
+```python
+@pytest.fixture(scope="function")
+def data():
+    return "Hello"
+
+```
+
+हा default scope आहे.
+
+```text
+test_1 → fixture create
+test_2 → fixture create
+test_3 → fixture create
+
+```
+
+प्रत्येक test ला नवीन fixture.
+
+---
+
+## 9.2 Class Scope
+
+```python
 @pytest.fixture(scope="class")
+def data():
+    return "Hello"
+
+```
+
+एका test class मधील tests साठी fixture एकदा create होतो.
+
+---
+
+## 9.3 Module Scope
+
+```python
 @pytest.fixture(scope="module")
+def data():
+    return "Hello"
+
+```
+
+एका Python test file/module साठी fixture एकदा create होतो.
+
+---
+
+## 9.4 Package Scope
+
+```python
 @pytest.fixture(scope="package")
+def data():
+    return "Hello"
+
+```
+
+एका package साठी fixture तयार होतो.
+
+हा scope तुलनेने कमी वापरला जातो.
+
+---
+
+## 9.5 Session Scope
+
+```python
 @pytest.fixture(scope="session")
-Scope	         Fixture                                कधी तयार होतं	उदाहरण वापर
-function        (डिफॉल्ट)	प्रत्येक टेस्ट फंक्शनसाठी नव्याने	        साधा data, प्रत्येक टेस्टला fresh हवं असेल तर
-class	        प्रत्येक टेस्ट क्लाससाठी एकदाच	                क्लासमधल्या सगळ्या टेस्ट्सना same setup लागत असेल
-module	        प्रत्येक फाईलसाठी एकदाच	                    त्या फाईलमधल्या सगळ्या टेस्ट्सना same resource लागत असेल
-package	        प्रत्येक पॅकेजसाठी (फोल्डर) एकदाच	            कमी वापरलं जातं
-session	        संपूर्ण pytest रनमध्ये एकदाच	                Database connection, server सुरू करणे — जड (heavy) गोष्टी
---------------------------------------------------------------------------------------------------------------
-Parametrization म्हणजे काय?
- !Parametrization allows us to run the same test with multiple sets of input data.
- !@pytest.mark.parametrize():हा test multiple input sets सह execute कर.
+def data():
+    return "Hello"
 
-----------------------------------------------------------------------------------------------------------
-conftest.py म्हणजे:
- |Shared pytest fixtures ठेवण्यासाठीची special file.
- |Pytest conftest.py automatically discover करतो.
- |conftest.py is a special pytest configuration file commonly used to define shared fixtures that can be 
-           automatically discovered by pytest.
----------------------------------------------------------------------------------------------------------
-What is the default fixture scope?
- ! function
--------------------------------------------------------------------------------------------------------------
-Unit Test vs Integration Test
-Unit Test = एक छोटा भाग स्वतंत्रपणे test करणे.  def add(a, b):return a + b
-Integration Test = दोन किंवा अधिक parts एकत्र काम करत आहेत का ते test करणे. def test_add():    assert add(2, 3) == 5
----------------------------------------------------------------------------------------------------------------
-Mocking:Testing करताना प्रत्येक वेळेस real payment API call करणे चुकीचे.त्याऐवजी आपण fake object वापरतो.याला:Mocking म्हणतात.
-       :Mocking means replacing a real dependency with a fake object during testing.
-Mock:from unittest.mock import Mock
-MagicMock:from unittest.mock import MagicMock
-Q1. What is mocking?
-Mocking is the technique of replacing a real dependency with a controlled fake object during testing.
-Q2. Why do we mock external APIs?
-To make tests fast, deterministic, isolated, and independent of external services.
-Q3. What is patch()?
-patch() temporarily replaces an object with a mock during a test.
-Q4. Difference between Mock and MagicMock?
-Mock provides standard mocking functionality, while MagicMock additionally supports Python magic methods.
----------------------------------------------------------------------------------------------------------------
-Coverage :generate test report
-Pytest Report : हे manually पाहण्यापेक्षा आपण report generate करू शकतो.
+```
+
+संपूर्ण pytest execution मध्ये fixture एकदाच तयार होतो.
+
+उदा.:
+
+```text
+pytest run
+   ↓
+session fixture create
+   ↓
+all tests
+   ↓
+pytest run समाप्त
+
+```
+
+Heavy resources साठी useful:
+
+- Database setup
+- Test server
+- Expensive initialization
+- Shared configuration
+
+---
+
+# 10. Parametrization म्हणजे काय?
+
+**Parametrization** म्हणजे same test वेगवेगळ्या input values सोबत अनेक वेळा run करणे.
+
+Pytest मध्ये:
+
+```python
+@pytest.mark.parametrize()
+
+```
+
+Example:
+
+```python
+import pytest
+
+
+def add(a, b):
+    return a + b
+
+
+@pytest.mark.parametrize(
+    "a,b,expected",
+    [
+        (2, 3, 5),
+        (10, 20, 30),
+        (5, 5, 10)
+    ]
+)
+def test_add(a, b, expected):
+    assert add(a, b) == expected
+
+```
+
+इथे एकच test तीन different data sets सोबत execute होईल.
+
+### Advantage
+
+Repeated test code लिहावे लागत नाही.
+
+---
+
+# 11. What is `conftest.py`?
+
+`conftest.py` ही Pytest ची **special file** आहे.
+
+यामध्ये commonly shared fixtures ठेवतो.
+
+Pytest `conftest.py` automatically discover करू शकतो.
+
+Example structure:
+
+```text
+app/
+│
+├── conftest.py
+│
+├── test_user.py
+├── test_product.py
+└── test_order.py
+
+```
+
+`conftest.py`:
+
+```python
+import pytest
+
+
+@pytest.fixture
+def user():
+    return {
+        "name": "Akshay"
+    }
+
+```
+
+नंतर test मध्ये fixture वापरू शकतो:
+
+```python
+def test_user(user):
+    assert user["name"] == "Akshay"
+
+```
+
+### Interview answer
+
+> `conftest.py` is a special pytest file used to define shared fixtures and pytest configuration that can be automatically discovered by tests.
+
+---
+
+# 12. What is the Default Fixture Scope?
+
+Default fixture scope आहे:
+
+```text
+function
+
+```
+
+Example:
+
+```python
+@pytest.fixture
+def data():
+    ...
+
+```
+
+हे internally:
+
+```python
+@pytest.fixture(scope="function")
+
+```
+
+सारखे आहे.
+
+---
+
+# 13. Unit Test vs Integration Test
+
+हा एक important interview topic आहे.
+
+## Unit Test
+
+Unit test मध्ये application चा **smallest testable unit** independently test करतो.
+
+Example:
+
+```python
+def add(a, b):
+    return a + b
+
+```
+
+Test:
+
+```python
+def test_add():
+    assert add(2, 3) == 5
+
+```
+
+इथे फक्त `add()` function test केला आहे.
+
+### Simple meaning
+
+> Unit Test = एका छोट्या component/function ला isolated पद्धतीने test करणे.
+
+---
+
+# 14. Integration Test
+
+Integration test मध्ये **दोन किंवा अधिक components एकत्र properly काम करत आहेत का** ते test करतो.
+
+उदाहरण:
+
+```text
+FastAPI endpoint
+       ↓
+Service
+       ↓
+Database
+
+```
+
+हे components एकत्र test करणे म्हणजे integration testing.
+
+### Important Correction
+
+तुमच्या original notes मध्ये:
+
+```text
+def test_add():
+    assert add(2, 3) == 5
+
+```
+
+हे **Integration Test नाही**.
+
+हे **Unit Test** आहे.
+
+### Interview definition
+
+> Integration testing verifies that multiple components or systems work correctly together.
+
+---
+
+# 15. Mocking म्हणजे काय?
+
+Testing करताना external dependency प्रत्येक वेळेस real वापरणे योग्य नसते.
+
+उदाहरण:
+
+```text
+Your Application
+      ↓
+Payment API
+      ↓
+Real Payment System
+
+```
+
+Test करताना प्रत्येक वेळी real payment API call केला तर:
+
+- Test slow होऊ शकतो
+- Internet dependency येते
+- पैसे actually charge होण्याचा risk असतो
+- External service unavailable असू शकते
+
+म्हणून आपण **fake/mock dependency** वापरतो.
+
+### Definition
+
+> Mocking is the technique of replacing a real dependency with a controlled fake object during testing.
+
+---
+
+# 16. Why Do We Mock External APIs?
+
+External APIs mock करण्याचे कारण:
+
+```text
+Fast
+Deterministic
+Isolated
+Independent
+Safe
+
+```
+
+Interview answer:
+
+> We mock external APIs to make tests fast, deterministic, isolated, and independent of external services.
+
+---
+
+# 17. Mock
+
+Python मध्ये:
+
+```python
+from unittest.mock import Mock
+
+```
+
+Example:
+
+```python
+mock_payment = Mock()
+
+mock_payment.pay.return_value = "success"
+
+```
+
+आता actual payment API call न करता fake response मिळवू शकतो.
+
+---
+
+# 18. MagicMock
+
+```python
+from unittest.mock import MagicMock
+
+```
+
+`MagicMock` हा Mock सारखाच आहे, पण Python च्या **magic/dunder methods** साठी additional support देतो.
+
+उदा.:
+
+```python
+__str__
+__len__
+__iter__
+__getitem__
+
+```
+
+### Interview answer
+
+> `Mock` provides standard mocking functionality, while `MagicMock` also supports Python magic methods.
+
+---
+
+# 19. What is `patch()`?
+
+`patch()` वापरून आपण test च्या duration मध्ये एखादा real object temporarily replace करू शकतो.
+
+Example:
+
+```python
+from unittest.mock import patch
+
+
+def get_payment():
+    return payment_api.call()
+
+
+def test_payment():
+    with patch("module.payment_api.call") as mock_call:
+        mock_call.return_value = "success"
+
+        result = get_payment()
+
+        assert result == "success"
+
+```
+
+### Important
+
+`patch()` permanent replacement करत नाही.
+
+Test संपल्यानंतर original object restore होतो.
+
+### Interview answer
+
+> `patch()` temporarily replaces an object with a mock during a test.
+
+---
+
+# 20. Coverage म्हणजे काय?
+
+**Code Coverage** म्हणजे आपल्या source code मधील किती भाग tests द्वारे execute झाला हे measure करणे.
+
+Example:
+
+```text
+Total code = 100 lines
+Executed by tests = 80 lines
+
+Coverage = 80%
+
+```
+
+Coverage tool म्हणून commonly:
+
+```bash
+pytest-cov
+
+```
+
+Install:
+
+```bash
+pip install pytest-cov
+
+```
+
+Run:
+
+```bash
+pytest --cov
+
+```
+
+Specific application folder:
+
+```bash
+pytest --cov=app
+
+```
+
+---
+
+# 21. HTML Coverage Report
+
+HTML coverage report generate करण्यासाठी:
+
+```bash
+pytest --cov=app --cov-report=html
+
+```
+
+यामुळे साधारणपणे:
+
+```text
+htmlcov/
+
+```
+
+folder तयार होतो.
+
+त्यामध्ये HTML coverage report असतो.
+
+---
+
+# 22. Pytest HTML Report
+
+Test execution चा HTML report हवा असेल तर:
+
+```bash
 pip install pytest-html
-pytest --html=report.html --self-contained-html
-pytest --html=report.html  !HTML Report Generate कर
---------------------------------------------------------------------------------------------------------
-AAA Pattern
-A → Arrange     Test साठी data तयार करणे.      ex:  def test_add():(a = 10b = 20)
-A → Act         Function call करणे.           ex:result = add(a, b)
-A → Assert      Expected result verify करणे. ex:assert result == 30
-----------------------------------------------------------------------------------------------------------
-TestClient म्हणजे काय?
- Python code मधून FastAPI endpoint ला request पाठवण्यासाठी वापरलेला testing client.
 
+```
+
+Run:
+
+```bash
+pytest --html=report.html --self-contained-html
+
+```
+
+यामुळे:
+
+```text
+report.html
+
+```
+
+तयार होईल.
+
+### Important Difference
+
+**pytest-html** → Test results चा HTML report.
+
+**pytest-cov** → Code coverage measure/report.
+
+हे दोन्ही वेगवेगळे आहेत.
+
+---
+
+# 23. AAA Pattern
+
+AAA म्हणजे:
+
+```text
+A → Arrange
+A → Act
+A → Assert
+
+```
+
+Testing code organize करण्याचा हा common pattern आहे.
+
+---
+
+## Arrange
+
+Test साठी required data/setup तयार करणे.
+
+```python
+a = 10
+b = 20
+
+```
+
+---
+
+## Act
+
+Actual function call करणे.
+
+```python
+result = add(a, b)
+
+```
+
+---
+
+## Assert
+
+Expected result verify करणे.
+
+```python
+assert result == 30
+
+```
+
+Complete example:
+
+```python
+def test_add():
+
+    # Arrange
+    a = 10
+    b = 20
+
+    # Act
+    result = add(a, b)
+
+    # Assert
+    assert result == 30
+
+```
+
+### Interview answer
+
+> AAA stands for Arrange, Act, and Assert. It is a common pattern for structuring test cases clearly.
+
+---
+
+# 24. FastAPI TestClient म्हणजे काय?
+
+FastAPI मध्ये endpoint test करण्यासाठी `TestClient` वापरू शकतो.
+
+### Simple meaning
+
+> `TestClient` allows us to send HTTP requests to a FastAPI application from Python test code without manually using Postman.
+
+Example:
+
+```python
+from fastapi.testclient import TestClient
+from app.main import app
+
+client = TestClient(app)
+
+
+def test_root():
+    response = client.get("/")
+
+    assert response.status_code == 200
+
+```
+
+इथे:
+
+```python
+client.get("/")
+
+```
+
+FastAPI च्या `/` endpoint ला request पाठवतो.
+
+नंतर:
+
+```python
+assert response.status_code == 200
+
+```
+
+response verify करतो.
+
+---
+
+# 25. FastAPI POST Test Example
+
+Suppose endpoint:
+
+```python
+@app.post("/products")
+def create_product(product: Product):
+    return product
+
+```
+
+Test:
+
+```python
+def test_create_product():
+
+    response = client.post(
+        "/products",
+        json={
+            "name": "Laptop",
+            "price": 50000
+        }
+    )
+
+    assert response.status_code == 200
+
+```
+
+इथे आपण actual HTTP request सारखा test करतो.
+
+---
+
+# 26. Pytest Important Commands
+
+### Run all tests
+
+```bash
+pytest
+
+```
+
+### Verbose
+
+```bash
+pytest -v
+
+```
+
+### Show print output
+
+```bash
+pytest -s
+
+```
+
+### Verbose + print
+
+```bash
+pytest -v -s
+
+```
+
+### Specific file
+
+```bash
+pytest test_math.py
+
+```
+
+### Specific function
+
+```bash
+pytest test_math.py::test_add
+
+```
+
+### Specific function + verbose
+
+```bash
+pytest test_math.py::test_add -v
+
+```
+
+### Stop after first failure
+
+```bash
+pytest -x
+
+```
+
+### Run failed tests again
+
+```bash
+pytest --lf
+
+```
+
+`--lf` = last failed
+
+---
+
+# 27. Important Pytest Concepts — Quick Revision
+
+| Concept | Meaning |
+|---|---|
+| Pytest | Python testing framework |
+| `assert` | Verifies expected result |
+| `-v` | Verbose output |
+| `-s` | Shows `print()` output |
+| `pytest.raises()` | Verifies expected exception |
+| Fixture | Reusable test setup/data |
+| Fixture scope | Controls fixture lifetime/reuse |
+| Default scope | `function` |
+| Parametrize | Same test with multiple inputs |
+| `conftest.py` | Shared fixtures/configuration |
+| Unit Test | Tests one component independently |
+| Integration Test | Tests multiple components together |
+| Mock | Fake dependency |
+| MagicMock | Mock + magic method support |
+| `patch()` | Temporary replacement |
+| Coverage | Measures executed code |
+| `pytest-html` | HTML test-result report |
+| `pytest-cov` | Code coverage |
+| AAA | Arrange → Act → Assert |
+| TestClient | Tests FastAPI endpoints programmatically |
+
+-------------- | -------------------------------------------- |
+| Pytest            | Python testing framework                     |
+| `assert`          | Expected result verify करतो                  |
+| `-v`              | Verbose output                               |
+| `-s`              | `print()` output दाखवतो                      |
+| `pytest.raises()` | Expected exception verify करतो               |
+| Fixture           | Reusable test setup/data                     |
+| Fixture scope     | Fixture किती वेळा create/reuse होईल          |
+| Default scope     | `function`                                   |
+| Parametrize       | Same test with multiple inputs               |
+| `conftest.py`     | Shared fixtures/configuration                |
+| Unit Test         | Single component/function independently test |
+| Integration Test  | Multiple components together test            |
+| Mock              | Fake dependency                              |
+| MagicMock         | Mock + magic method support                  |
+| `patch()`         | Temporary replacement                        |
+| Coverage          | किती code tests ने execute केला ते measure   |
+| `pytest-html`     | HTML test report                             |
+| `pytest-cov`      | Code coverage                                |
+| AAA               | Arrange → Act → Assert                       |
+| TestClient        | FastAPI endpoints test करण्यासाठी client     |
+
+---
+
+# ⭐ MUST REMEMBER FOR INTERVIEW
+
+- **Default fixture scope:** `function`
+- **`-v`:** Verbose mode
+- **`-s`:** Show `print()` output
+- **`pytest.raises()`:** Expected exception
+- **`@pytest.mark.parametrize`:** Multiple input sets
+- **`conftest.py`:** Shared fixtures
+- **Unit Test:** One component in isolation
+- **Integration Test:** Multiple components working together
+- **Mocking:** Replace real dependency with controlled fake
+- **`pytest-html`:** Test result HTML report
+- **`pytest-cov`:** Code coverage
+- **AAA:** Arrange → Act → Assert
+- **FastAPI TestClient:** Programmatic endpoint testing
+
+---
+
+# 🎯 INTERVIEW QUESTIONS — QUICK ANSWERS
+
+### Q1. What is Pytest?
+
+> Pytest is a Python testing framework used to write and execute automated tests.
+
+### Q2. What is assert?
+
+> `assert` verifies that an expected condition is true. If it is false, the test fails.
+
+### Q3. What is the default fixture scope?
+
+> `function`.
+
+### Q4. What is a fixture?
+
+> A fixture is a reusable test setup or test data provided to test functions.
+
+### Q5. What is parametrization?
+
+> Parametrization allows the same test to run with multiple sets of input data.
+
+### Q6. What is conftest.py?
+
+> `conftest.py` is a special pytest file used for shared fixtures and pytest configuration.
+
+### Q7. What is mocking?
+
+> Mocking replaces a real dependency with a controlled fake object during testing.
+
+### Q8. Why mock external APIs?
+
+> To make tests fast, deterministic, isolated, and independent of external services.
+
+### Q9. Mock vs MagicMock?
+
+> Mock provides standard mocking functionality, while MagicMock additionally supports Python magic methods.
+
+### Q10. What is patch()?
+
+> `patch()` temporarily replaces an object with a mock during a test.
+
+### Q11. Unit vs Integration Test?
+
+> Unit testing tests an individual component independently, while integration testing verifies that multiple components work correctly together.
+
+### Q12. What is TestClient?
+
+> TestClient allows us to test FastAPI endpoints programmatically by sending HTTP requests from Python test code.
+
+### Q13. What is code coverage?
+
+> Code coverage measures how much of the application code is executed by the tests.
+
+### Q14. What is AAA pattern?
+
+> AAA stands for Arrange, Act, Assert and provides a clear structure for writing test cases.
+
+---
+
+## 🧠 30-SECOND REVISION
+
+**Pytest** → automate tests  |  **assert** → verify result  |  **fixture** → reusable setup
+
+**parametrize** → multiple inputs  |  **mock** → fake dependency  |  **patch** → temporary replacement
+
+**coverage** → code executed  |  **AAA** → Arrange → Act → Assert  |  **TestClient** → FastAPI endpoint testing
+
+> **Interview tip:** First explain the concept in one sentence, then give a small example. Avoid memorizing long definitions.
